@@ -241,6 +241,62 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e1e7b6e48403dfa41ba56a42d0deb4e2, type: 2}
   m_IsPrefabParent: 0
+--- !u!1001 &788986423
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2086271787}
+    m_Modifications:
+    - target: {fileID: 4792437723822600, guid: 15112aaea9c3ca44f8e377ef6c158bf4, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792437723822600, guid: 15112aaea9c3ca44f8e377ef6c158bf4, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792437723822600, guid: 15112aaea9c3ca44f8e377ef6c158bf4, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792437723822600, guid: 15112aaea9c3ca44f8e377ef6c158bf4, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792437723822600, guid: 15112aaea9c3ca44f8e377ef6c158bf4, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792437723822600, guid: 15112aaea9c3ca44f8e377ef6c158bf4, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792437723822600, guid: 15112aaea9c3ca44f8e377ef6c158bf4, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4792437723822600, guid: 15112aaea9c3ca44f8e377ef6c158bf4, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 23817241029955656, guid: 15112aaea9c3ca44f8e377ef6c158bf4,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a88f4425722a090499800d71f0897847, type: 2}
+    - target: {fileID: 1266522697663202, guid: 15112aaea9c3ca44f8e377ef6c158bf4, type: 2}
+      propertyPath: m_TagString
+      value: MovingObstacle
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 15112aaea9c3ca44f8e377ef6c158bf4, type: 2}
+  m_IsPrefabParent: 0
+--- !u!4 &788986424 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4792437723822600, guid: 15112aaea9c3ca44f8e377ef6c158bf4,
+    type: 2}
+  m_PrefabInternal: {fileID: 788986423}
 --- !u!1001 &791825317
 Prefab:
   m_ObjectHideFlags: 0
@@ -388,6 +444,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 841183b936286004fa1dbc1f021e6437, type: 2}
+    - target: {fileID: 1266522697663202, guid: ac8e0c6f2b740bd4b8ccb8d73dfa9580, type: 2}
+      propertyPath: m_TagString
+      value: StationaryObstacle
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ac8e0c6f2b740bd4b8ccb8d73dfa9580, type: 2}
   m_IsPrefabParent: 0
@@ -410,12 +470,12 @@ MonoBehaviour:
   fXMovement: 0
   fZMovement: 0
   fYJump: 0
-  fYJumpLimiter: 0
   bIsJumpingUp: 0
   bIsFallingDown: 0
   fMovementSpeed: 2
   fJumpSpeed: 0
   fJumpMaxSpeed: 5
+  fJumpInput: 0
   v3PlayerPosition: {x: 0, y: 0, z: 0}
 --- !u!54 &1395936589
 Rigidbody:
@@ -530,6 +590,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1872035989 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1266522697663202, guid: 15112aaea9c3ca44f8e377ef6c158bf4,
+    type: 2}
+  m_PrefabInternal: {fileID: 788986423}
+--- !u!114 &1872035990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1872035989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 226039e8b5fb06e4eb06fb7a0544f6dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fZMovement: 0
+  fMoveInput: 0.5
+  fMovementSpeed: 0
+  fMovementMaxSpeed: 4
+  bToggleDirectionZInwards: 0
 --- !u!4 &2086271787
 Transform:
   m_ObjectHideFlags: 0
@@ -544,6 +625,7 @@ Transform:
   - {fileID: 4811370}
   - {fileID: 1483273509}
   - {fileID: 946472971}
+  - {fileID: 788986424}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -20,8 +20,9 @@ public class Controller : MonoBehaviour
 
     public float fMovementSpeed;
     public float fJumpSpeed;
+    public float fJumpMaxSpeed;
 
-    public Vector3 v3JumpLimiterPosition;
+    public float fJumpInput;
 
     public Vector3 v3PlayerPosition;
 
@@ -40,56 +41,107 @@ public class Controller : MonoBehaviour
         fXMovement = Input.GetAxis("Horizontal") * Time.deltaTime * fMovementSpeed;
         fZMovement = Input.GetAxis("Vertical") * Time.deltaTime * fMovementSpeed;
 
-        if(bIsJumpingUp)
-        {
-        }
-
-        if(bIsFallingDown)
+        if (bIsFallingDown)
         {
             Debug.Log("Is Falling Down");
+        }
+
+        if (bIsJumpingUp)
+        {
+            this.gameObject.GetComponent<Rigidbody>().useGravity = false;
+            fYJump = fJumpInput * Time.deltaTime * fJumpSpeed;
+            fJumpSpeed -= 0.095f;
+        }
+
+        if(fJumpSpeed < 0.0f)
+        {
+            fJumpSpeed = 0.0f;
+            bIsJumpingUp = false;
+            bIsFallingDown = true;
+            this.gameObject.GetComponent<Rigidbody>().useGravity = true;
         }
 
         this.transform.Translate(fXMovement, fYJump, fZMovement);
 	}
 
+    private void JumpingEnable(Collision collision)
+    {
+        bIsFallingDown = false;
+        if ((fJumpInput = Input.GetAxis("Fire1")) != 0.0f)
+        {
+            Debug.Log("Is Jumping!!");
+            Physics.IgnoreCollision(collision.collider, this.GetComponent<Collider>(), true);
+            bIsJumpingUp = true;
+            fJumpSpeed = fJumpMaxSpeed;
+        }
+    }
+
+    private void DeathEnable(Collision collision)
+    {
+        Debug.Log("Player Died!");
+        this.transform.position = v3PlayerPosition;
+        bIsFallingDown = false;
+        bIsJumpingUp = false;
+    }
+
+    private void GroundedReset(Collision collision)
+    {
+        fYJump = 0.0f;
+        fJumpSpeed = 0.0f;
+        bIsJumpingUp = false;
+        bIsFallingDown = true;
+        this.gameObject.GetComponent<Rigidbody>().useGravity = true;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.tag == "Death")
+        if (collision.gameObject.tag == "Death")
         {
-            Debug.Log("Player Died!");
-            this.transform.position = v3PlayerPosition;
-            bIsFallingDown = false;
-            bIsJumpingUp = false;
+            DeathEnable(collision);
+            return;
+        }
+
+        if (collision.gameObject.tag == "Ground")
+        {
+            GroundedReset(collision);
+            return;
+        }
+
+        if (collision.gameObject.tag == "StationaryObstacle")
+        {
+            GroundedReset(collision);
+            return;
+        }
+
+        if (collision.gameObject.tag == "MovingObstacle")
+        {
+            GroundedReset(collision);
             return;
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.collider == null)
+        if(bIsJumpingUp)
         {
-            if (!bIsJumpingUp)
-            {
-                //In free fall!
-                bIsFallingDown = true;
-            }
-            else
-            {
-                //In jumping mode!
-                bIsFallingDown = false;
-            }
             return;
         }
 
-        if (collision.collider.tag == "Ground")
+        if (collision.gameObject.tag == "Ground")
         {
-            if(Input.GetAxis("Jump") != 0.0f)
-            {
-                Debug.Log("Is Jumping!!");
-                collision.collider.enabled = false;
-                bIsJumpingUp = true;
-            }
+            JumpingEnable(collision);
+            return;
+        }
 
+        if (collision.gameObject.tag == "StationaryObstacle")
+        {
+            JumpingEnable(collision);
+            return;
+        }
+
+        if (collision.gameObject.tag == "MovingObstacle")
+        {
+            JumpingEnable(collision);
             return;
         }
     }
