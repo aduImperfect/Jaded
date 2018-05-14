@@ -41,4 +41,28 @@ public class MovingObstacle : MonoBehaviour
         }
         this.transform.Translate(fXMovement, fYMovement, fZMovement);
     }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            Vector3 v3PlayerPos = collision.gameObject.transform.position;
+            Vector3 v3CurrentToPlayer = v3PlayerPos - this.transform.position;
+
+            float fMagnitude = v3CurrentToPlayer.magnitude;
+
+            Vector3 v3CurrentYAxis = Vector3.zero;
+            v3CurrentYAxis.y = 1.0f;
+
+            Vector3 v3CurrentToPlayerNormalized = v3CurrentToPlayer.normalized;
+            Vector3 v3CurrentYAxisNormalized = v3CurrentYAxis.normalized;
+
+            //A.B.cos(theta).
+            float fDotProduct = Vector3.Dot(v3CurrentToPlayerNormalized, v3CurrentYAxisNormalized);
+
+            float fAngle = Mathf.Acos(fDotProduct) * Mathf.Rad2Deg;
+
+            Debug.Log("DotProduct: " + fDotProduct + ", Angle: " + fAngle);
+        }
+    }
 }
