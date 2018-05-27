@@ -46,7 +46,7 @@ public class Controller : MonoBehaviour
         Vector3 movement = new Vector3(fXMovement, 0.0f, fZMovement);
         Vector3 jumping = new Vector3(0.0f, 0.0f, 0.0f);
 
-        GetComponent<Rigidbody>().velocity = movement * fMovementSpeed;
+        GetComponent<Rigidbody>().AddForce(movement * fMovementSpeed, ForceMode.VelocityChange);
 
         if (bIsFallingDown)
         {
@@ -61,7 +61,7 @@ public class Controller : MonoBehaviour
             fJumpSpeed -= 0.095f;
 
             jumping.y = fYJump;
-            GetComponent<Rigidbody>().velocity += jumping * fJumpSpeed;
+            GetComponent<Rigidbody>().AddForce(jumping * fJumpSpeed, ForceMode.VelocityChange);
             return;
         }
 
@@ -73,7 +73,7 @@ public class Controller : MonoBehaviour
             this.gameObject.GetComponent<Rigidbody>().useGravity = true;
 
             jumping.y = -1.0f;
-            GetComponent<Rigidbody>().velocity += jumping * fJumpMaxSpeed;
+            GetComponent<Rigidbody>().AddForce(jumping * fJumpMaxSpeed, ForceMode.VelocityChange);
             return;
         }
     }
@@ -105,6 +105,10 @@ public class Controller : MonoBehaviour
         bIsJumpingUp = false;
         bIsFallingDown = true;
         this.gameObject.GetComponent<Rigidbody>().useGravity = true;
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+
     }
 
     private void OnCollisionEnter(Collision collision)
