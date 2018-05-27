@@ -7,6 +7,7 @@
 */
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Controller : MonoBehaviour
@@ -34,40 +35,53 @@ public class Controller : MonoBehaviour
         bIsFallingDown = false;
         v3PlayerPosition = this.transform.position;
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    // Update is called once per frame
+    void FixedUpdate ()
     {
-        fXMovement = Input.GetAxis("Horizontal") * Time.deltaTime * fMovementSpeed;
-        fZMovement = Input.GetAxis("Vertical") * Time.deltaTime * fMovementSpeed;
+        fXMovement = Input.GetAxis("Horizontal");
+        fZMovement = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(fXMovement, 0.0f, fZMovement);
+        Vector3 jumping = new Vector3(0.0f, 0.0f, 0.0f);
+
+        GetComponent<Rigidbody>().velocity = movement * fMovementSpeed;
 
         if (bIsFallingDown)
         {
             Debug.Log("Is Falling Down");
+            return;
         }
 
         if (bIsJumpingUp)
         {
             this.gameObject.GetComponent<Rigidbody>().useGravity = false;
-            fYJump = fJumpInput * Time.deltaTime * fJumpSpeed;
+            fYJump = fJumpInput;
             fJumpSpeed -= 0.095f;
+
+            jumping.y = fYJump;
+            GetComponent<Rigidbody>().velocity += jumping * fJumpSpeed;
+            return;
         }
 
-        if(fJumpSpeed < 0.0f)
+        if (fJumpSpeed < 0.0f)
         {
             fJumpSpeed = 0.0f;
             bIsJumpingUp = false;
             bIsFallingDown = true;
             this.gameObject.GetComponent<Rigidbody>().useGravity = true;
-        }
 
-        this.transform.Translate(fXMovement, fYJump, fZMovement);
-	}
+            jumping.y = -1.0f;
+            GetComponent<Rigidbody>().velocity += jumping * fJumpMaxSpeed;
+            return;
+        }
+    }
 
     private void JumpingEnable(Collision collision)
     {
         bIsFallingDown = false;
-        if ((fJumpInput = Input.GetAxis("Fire1")) != 0.0f)
+        if (Mathf.Abs(fJumpInput = Input.GetAxis("Jump")) >= 0.01f)
         {
             Debug.Log("Is Jumping!!");
             Physics.IgnoreCollision(collision.collider, this.GetComponent<Collider>(), true);
